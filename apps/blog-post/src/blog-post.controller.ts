@@ -43,7 +43,7 @@ export class BlogPostController {
 
   @MessagePattern('blog-post.get-user-post')
   async getUserAllPosts(@Payload() payload: { userId: string }) {
-    console.log(payload, "ublog api")
+    // console.log(payload, "blog api")
     const response = await this.blogPostService.getPostsByUserId(payload.userId);
     if (!response) {
       throw new RpcException({

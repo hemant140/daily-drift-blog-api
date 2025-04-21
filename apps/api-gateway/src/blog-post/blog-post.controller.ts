@@ -13,7 +13,7 @@ import {
 import { Response, Request } from 'express';
 import { BlogPostService } from './blog-post.service';
 import { BLOGPOSTDTO } from 'apps/blog-post/src/dto/blog-post.dto';
-import { JwtAuthGuard } from '../gaurd/jwt-auth.gaurd';
+import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 
 
 @Controller('blog-post')

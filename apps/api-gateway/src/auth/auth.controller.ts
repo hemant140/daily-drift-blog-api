@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { SIGNINDTO } from 'apps/auth/src/dto/signin.dto';
 import { SIGNUPDTO } from 'apps/auth/src/dto/signup.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GoogleOAuthGuard } from '../guard/google-oauth.guard';
 
 
 @Controller('auth')
@@ -56,12 +57,12 @@ export class AuthController {
   }
 
   @Get('google')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleOAuthGuard)
   async googleAuth() { }
 
 
   @Get('google-redirect')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleOAuthGuard)
   async googleRedirect(
     @Req() req: Request,
     @Res() res: Response
