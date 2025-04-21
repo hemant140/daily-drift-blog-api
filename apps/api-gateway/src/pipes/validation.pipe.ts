@@ -1,4 +1,4 @@
-import { PipeTransform, Injectable, BadRequestException, HttpStatus, HttpException } from '@nestjs/common';
+import { PipeTransform, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { ObjectSchema } from 'joi';
 
 

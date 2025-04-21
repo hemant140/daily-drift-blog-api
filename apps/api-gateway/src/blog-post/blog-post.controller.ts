@@ -23,6 +23,7 @@ import { SchemaValidation } from '../validations/schema.validation';
 export class BlogPostController {
   constructor(private readonly blogPostService: BlogPostService) { }
 
+
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new blog post' })
@@ -51,6 +52,8 @@ export class BlogPostController {
     }
   }
 
+
+
   @Get('user-posts')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all blog posts by the authenticated user' })
@@ -75,6 +78,8 @@ export class BlogPostController {
     }
   }
 
+
+
   @Get()
   @ApiOperation({ summary: 'Get all blog posts' })
   @ApiResponse({ status: 200, description: 'List of all posts' })
@@ -94,6 +99,8 @@ export class BlogPostController {
       });
     }
   }
+
+
 
   @Get(':blogPostId')
   @ApiOperation({ summary: 'Get blog post by ID' })
@@ -118,6 +125,8 @@ export class BlogPostController {
       });
     }
   }
+
+
 
   @Put(':blogPostId')
   @UseGuards(JwtAuthGuard)
