@@ -14,12 +14,17 @@ import { Response, Request } from 'express';
 import { BlogPostService } from './blog-post.service';
 import { BLOGPOSTDTO } from 'apps/blog-post/src/dto/blog-post.dto';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Blog Posts')
 @Controller('blog-post')
 export class BlogPostController {
   constructor(private readonly blogPostService: BlogPostService) { }
 
+  @ApiOperation({ summary: 'Create a new blog post' })
+  @ApiBody({ type: BLOGPOSTDTO })
+  @ApiBearerAuth()
+  @ApiResponse({ status: 201, description: 'Post created successfully' })
   @Post()
   @UseGuards(JwtAuthGuard)
   async createPost(
@@ -44,6 +49,9 @@ export class BlogPostController {
     }
   }
 
+  @ApiOperation({ summary: 'Get all blog posts by the authenticated user' })
+  @ApiResponse({ status: 200, description: 'List of user posts' })
+  @ApiBearerAuth()
   @Get('user-posts')
   @UseGuards(JwtAuthGuard)
   async getAllUserPosts(
@@ -65,6 +73,8 @@ export class BlogPostController {
     }
   }
 
+  @ApiOperation({ summary: 'Get all blog posts' })
+  @ApiResponse({ status: 200, description: 'List of all posts' })
   @Get()
   async getAllPosts(
     @Res() res: Response,
@@ -83,6 +93,9 @@ export class BlogPostController {
     }
   }
 
+  @ApiOperation({ summary: 'Get blog post by ID' })
+  @ApiParam({ name: 'blogPostId', description: 'BlogPostId of the blog post' })
+  @ApiResponse({ status: 200, description: 'Blog post details' })
   @Get(':blogPostId')
   async getPostById(
     @Res() res: Response,
@@ -104,6 +117,11 @@ export class BlogPostController {
     }
   }
 
+  @ApiOperation({ summary: 'Update a blog post by ID' })
+  @ApiParam({ name: 'blogPostId', description: 'BlogPostId of the blog post' })
+  @ApiBearerAuth()
+  @ApiBody({ type: BLOGPOSTDTO })
+  @ApiResponse({ status: 200, description: 'Post updated successfully' })
   @Put(':blogPostId')
   @UseGuards(JwtAuthGuard)
   async updatePost(
@@ -127,6 +145,10 @@ export class BlogPostController {
     }
   }
 
+  @ApiOperation({ summary: 'Delete a blog post by ID' })
+  @ApiParam({ name: 'blogPostId', description: 'BlogPostId of the blog post' })
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'Post deleted successfully' })
   @Delete(':blogPostId')
   @UseGuards(JwtAuthGuard)
   async deletePost(

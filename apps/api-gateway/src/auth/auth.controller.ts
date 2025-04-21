@@ -4,13 +4,16 @@ import { Request, Response } from 'express';
 import { SIGNINDTO } from 'apps/auth/src/dto/signin.dto';
 import { SIGNUPDTO } from 'apps/auth/src/dto/signup.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { GoogleOAuthGuard } from '../guard/google-oauth.guard';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Auth Controller')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
+  @ApiOperation({ summary: 'Register Your Account', description: 'Create your account' })
+  @ApiBody({ type: SIGNUPDTO })
+  @ApiResponse({ status: 201, description: 'Sign up successfully' })
   @Post('signup')
   async registerUser(
     @Res() res: Response,
@@ -32,6 +35,9 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({ summary: 'Log in your account', description: 'Login & get JWT token' })
+  @ApiBody({ type: SIGNINDTO })
+  @ApiResponse({ status: 201, description: 'User login in successfully' })
   @Post('signin')
   async signin(
     @Res() res: Response,
@@ -57,12 +63,12 @@ export class AuthController {
   }
 
   @Get('google')
-  @UseGuards(GoogleOAuthGuard)
+  @UseGuards(AuthGuard('google'))
   async googleAuth() { }
 
 
   @Get('google-redirect')
-  @UseGuards(GoogleOAuthGuard)
+  @UseGuards(AuthGuard('google'))
   async googleRedirect(
     @Req() req: Request,
     @Res() res: Response
