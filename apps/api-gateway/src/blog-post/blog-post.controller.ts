@@ -15,22 +15,24 @@ import { BlogPostService } from './blog-post.service';
 import { BLOGPOSTDTO } from 'apps/blog-post/src/dto/blog-post.dto';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ValidationPipe } from '../pipes/validation.pipe';
+import { SchemaValidation } from '../validations/schema.validation';
 
 @ApiTags('Blog Posts')
 @Controller('blog-post')
 export class BlogPostController {
   constructor(private readonly blogPostService: BlogPostService) { }
 
+  @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new blog post' })
   @ApiBody({ type: BLOGPOSTDTO })
   @ApiBearerAuth()
   @ApiResponse({ status: 201, description: 'Post created successfully' })
-  @Post()
-  @UseGuards(JwtAuthGuard)
   async createPost(
     @Res() res: Response,
     @Req() req: Request,
-    @Body() payload: BLOGPOSTDTO
+    @Body(new ValidationPipe(SchemaValidation.blogPostSchema)) payload: BLOGPOSTDTO
   ) {
     const userId = req['userId']
     payload.author = userId
@@ -49,11 +51,11 @@ export class BlogPostController {
     }
   }
 
+  @Get('user-posts')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all blog posts by the authenticated user' })
   @ApiResponse({ status: 200, description: 'List of user posts' })
   @ApiBearerAuth()
-  @Get('user-posts')
-  @UseGuards(JwtAuthGuard)
   async getAllUserPosts(
     @Res() res: Response,
     @Req() req: Request
@@ -73,9 +75,9 @@ export class BlogPostController {
     }
   }
 
+  @Get()
   @ApiOperation({ summary: 'Get all blog posts' })
   @ApiResponse({ status: 200, description: 'List of all posts' })
-  @Get()
   async getAllPosts(
     @Res() res: Response,
   ) {
@@ -93,10 +95,10 @@ export class BlogPostController {
     }
   }
 
+  @Get(':blogPostId')
   @ApiOperation({ summary: 'Get blog post by ID' })
   @ApiParam({ name: 'blogPostId', description: 'BlogPostId of the blog post' })
   @ApiResponse({ status: 200, description: 'Blog post details' })
-  @Get(':blogPostId')
   async getPostById(
     @Res() res: Response,
     @Param('blogPostId') blogPostId: string
@@ -117,17 +119,17 @@ export class BlogPostController {
     }
   }
 
+  @Put(':blogPostId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a blog post by ID' })
   @ApiParam({ name: 'blogPostId', description: 'BlogPostId of the blog post' })
   @ApiBearerAuth()
   @ApiBody({ type: BLOGPOSTDTO })
   @ApiResponse({ status: 200, description: 'Post updated successfully' })
-  @Put(':blogPostId')
-  @UseGuards(JwtAuthGuard)
   async updatePost(
     @Res() res: Response,
     @Param('blogPostId') blogPostId: string,
-    @Body() data: Partial<BLOGPOSTDTO>,
+    @Body(new ValidationPipe(SchemaValidation.updateBlogPostSchema)) data: Partial<BLOGPOSTDTO>,
   ) {
     try {
       console.log(data, "payload", blogPostId)
@@ -145,12 +147,13 @@ export class BlogPostController {
     }
   }
 
+
+  @Delete(':blogPostId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a blog post by ID' })
   @ApiParam({ name: 'blogPostId', description: 'BlogPostId of the blog post' })
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Post deleted successfully' })
-  @Delete(':blogPostId')
-  @UseGuards(JwtAuthGuard)
   async deletePost(
     @Res() res: Response,
     @Param('blogPostId') blogPostId: string) {
