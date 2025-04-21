@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { GoogleStrategy } from '../oauth/google.strategies';
+
 import { ConfigModule } from '@nestjs/config';
 
 
@@ -23,6 +23,6 @@ import { ConfigModule } from '@nestjs/config';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService],
 })
 export class AuthModule { }
