@@ -7,15 +7,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     clientId = process.env.GOOGLE_CLIENT_ID
 
-    constructor(
-    ) {
-        super({
-            clientID: '554479897017-jrf9le50kn4nc0q3h1id62t4oenmvps0.apps.googleusercontent.com',
-            clientSecret: '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',
-            callbackURL: 'http://localhost:7001/api/v1/auth/google-redirect',
-            scope: ['email', 'profile'],
-        });
-    }
 
     async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
         const user = {
