@@ -23,26 +23,83 @@ export class BlogPostService {
   }
 
 
-  async getAllPosts(): Promise<BlogPost[]> {
+  async getAllPosts(page: number = 1, limit: number = 8): Promise<{
+    total: number
+    page: number
+    limit: number
+    postData: BlogPost[]
+  }> {
+    const skip = (page - 1) * limit;
     const response = await this.blogPostModel
       .find()
       .sort({ createdAt: -1 })
-      .populate('author', 'name email')
-    return response;
+      .skip(skip)
+      .limit(limit)
+      .populate('author', 'name email');
+    const total = await this.blogPostModel.countDocuments();
+
+    return {
+      total,
+      page,
+      limit,
+      postData: response,
+    };
   }
 
-  async getPostsByUserId(userId: string): Promise<BlogPost[]> {
-    try {
-      const posts = await this.blogPostModel
-        .find({ author: userId })
-        .sort({ createdAt: -1 })
-        .populate('author', 'name email');
-      return posts;
-    } catch (error) {
-      console.error('Get Posts By User ID Error:', error.message);
-      return [];
-    }
+  async getPostsByUserId(userId: string, page: number = 1, limit: number = 8): Promise<{
+    total: number
+    page: number
+    limit: number
+    postData: BlogPost[]
+  }> {
+    const skip = (page - 1) * limit;
+    const response = await this.blogPostModel
+      .find({ author: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('author', 'name email');
+    const total = await this.blogPostModel.countDocuments({ author: userId });
+
+    return {
+      total,
+      page,
+      limit,
+      postData: response,
+    };
   }
+
+  // async getPostsByUserId(userId: string, page: number, limit: number): Promise<
+  // total: number
+  // page: number
+  // limit: number
+  // postData: BlogPost[]> {
+  //   const skip = (page - 1) * limit;
+  //   const response = await this.blogPostModel
+  //     .find()
+  //     .sort({ createdAt: -1 })
+  //     .skip(skip)
+  //     .limit(limit)
+  //     .populate('author', 'name email');
+  //   const total = await this.blogPostModel.countDocuments();
+
+  //   return {
+  //     total,
+  //     page,
+  //     limit,
+  //     postData: response,
+  //   };
+  // try {
+  //   const posts = await this.blogPostModel
+  //     .find({ author: userId })
+  //     .sort({ createdAt: -1 })
+  //     .populate('author', 'name email');
+  //   return posts;
+  // } catch(error) {
+  //   console.error('Get Posts By User ID Error:', error.message);
+  //   return [];
+  // }
+  // }
 
 
 

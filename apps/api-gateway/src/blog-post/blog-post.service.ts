@@ -15,15 +15,15 @@ export class BlogPostService {
         );
     }
 
-    async getAllUserPosts(userId: string) {
+    async getAllUserPosts(userId: string, page: number, limit: number) {
         return await lastValueFrom(
-            this.blogPostClient.send('blog-post.get-user-post', { userId }),
+            this.blogPostClient.send('blog-post.get-user-post', { userId, page, limit }),
         );
     }
 
-    async getAllPosts() {
+    async getAllPosts(page: number, limit: number) {
         return await lastValueFrom(
-            this.blogPostClient.send('blog-post.get-all', {}),
+            this.blogPostClient.send('blog-post.get-all', { page, limit }),
         );
     }
 

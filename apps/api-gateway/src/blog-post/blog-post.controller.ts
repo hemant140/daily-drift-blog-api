@@ -9,6 +9,7 @@ import {
   Delete,
   Put,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { BlogPostService } from './blog-post.service';
@@ -61,11 +62,13 @@ export class BlogPostController {
   @ApiBearerAuth()
   async getAllUserPosts(
     @Res() res: Response,
-    @Req() req: Request
+    @Req() req: Request,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 8
   ) {
     const userId = req['userId']
     try {
-      const response = await this.blogPostService.getAllUserPosts(userId);
+      const response = await this.blogPostService.getAllUserPosts(userId, page, limit);
       return res.status(200).json({
         status: true,
         data: response,
@@ -84,10 +87,12 @@ export class BlogPostController {
   @ApiOperation({ summary: 'Get all blog posts' })
   @ApiResponse({ status: 200, description: 'List of all posts' })
   async getAllPosts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 8,
     @Res() res: Response,
   ) {
     try {
-      const response = await this.blogPostService.getAllPosts();
+      const response = await this.blogPostService.getAllPosts(+page, +limit);
       return res.status(200).json({
         status: true,
         data: response,

@@ -28,8 +28,9 @@ export class BlogPostController {
 
 
   @MessagePattern('blog-post.get-all')
-  async getAllPosts() {
-    const response = await this.blogPostService.getAllPosts();
+  async getAllPosts(@Payload() payload: { page: number, limit: number }) {
+    const { page, limit } = payload;
+    const response = await this.blogPostService.getAllPosts(page, limit);
 
     if (!response) {
       throw new RpcException({
@@ -42,9 +43,10 @@ export class BlogPostController {
   }
 
   @MessagePattern('blog-post.get-user-post')
-  async getUserAllPosts(@Payload() payload: { userId: string }) {
+  async getUserAllPosts(@Payload() payload: { userId: string, page: number, limit: number }) {
+    const { userId, page, limit } = payload
     // console.log(payload, "blog api")
-    const response = await this.blogPostService.getPostsByUserId(payload.userId);
+    const response = await this.blogPostService.getPostsByUserId(userId, page, limit);
     if (!response) {
       throw new RpcException({
         statusCode: HttpStatus.NOT_FOUND,
