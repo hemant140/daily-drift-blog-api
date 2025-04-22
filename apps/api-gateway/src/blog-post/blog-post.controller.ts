@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { BlogPostService } from './blog-post.service';
-import { BLOGPOSTDTO } from 'apps/blog-post/src/dto/blog-post.dto';
+import { BLOGPOSTDTO } from '../../../blog-post/src/dto/blog-post.dto';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from '../pipes/validation.pipe';
@@ -64,11 +64,12 @@ export class BlogPostController {
     @Res() res: Response,
     @Req() req: Request,
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 8
+    @Query('limit') limit: number = 8,
+    @Query('search') search: string = ''
   ) {
     const userId = req['userId']
     try {
-      const response = await this.blogPostService.getAllUserPosts(userId, page, limit);
+      const response = await this.blogPostService.getAllUserPosts(userId, +page, +limit, search);
       return res.status(200).json({
         status: true,
         data: response,
@@ -90,9 +91,10 @@ export class BlogPostController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 8,
     @Res() res: Response,
+    @Query('search') search: string = ''
   ) {
     try {
-      const response = await this.blogPostService.getAllPosts(+page, +limit);
+      const response = await this.blogPostService.getAllPosts(+page, +limit, search);
       return res.status(200).json({
         status: true,
         data: response,
@@ -117,7 +119,7 @@ export class BlogPostController {
   ) {
     try {
 
-      console.log(blogPostId, " :blog post id")
+      // console.log(blogPostId, " :blog post id")
       const response = await this.blogPostService.getPostById(blogPostId);
       return res.status(200).json({
         status: true,

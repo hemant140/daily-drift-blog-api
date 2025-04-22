@@ -23,20 +23,34 @@ export class BlogPostService {
   }
 
 
-  async getAllPosts(page: number = 1, limit: number = 8): Promise<{
+  async getAllPosts(page: number = 1, limit: number = 8, search: string = ''): Promise<{
     total: number
     page: number
     limit: number
     postData: BlogPost[]
   }> {
     const skip = (page - 1) * limit;
+
+    const filter = {
+      ...(search && {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+          { tag: { $regex: search, $options: 'i' } },
+        ]
+      }),
+    };
+
+    // console.log(search, "Search Query")
+
     const response = await this.blogPostModel
-      .find()
+      .find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate('author', 'name email');
-    const total = await this.blogPostModel.countDocuments();
+
+    const total = await this.blogPostModel.countDocuments(filter);
 
     return {
       total,
@@ -46,20 +60,30 @@ export class BlogPostService {
     };
   }
 
-  async getPostsByUserId(userId: string, page: number = 1, limit: number = 8): Promise<{
+  async getPostsByUserId(userId: string, page: number = 1, limit: number = 8, search: string): Promise<{
     total: number
     page: number
     limit: number
     postData: BlogPost[]
   }> {
     const skip = (page - 1) * limit;
+    const filter = {
+      author: userId,
+      ...(search && {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+          { tag: { $regex: search, $options: 'i' } },
+        ]
+      }),
+    };
     const response = await this.blogPostModel
-      .find({ author: userId })
+      .find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .populate('author', 'name email');
-    const total = await this.blogPostModel.countDocuments({ author: userId });
+    const total = await this.blogPostModel.countDocuments(filter);
 
     return {
       total,
@@ -68,39 +92,6 @@ export class BlogPostService {
       postData: response,
     };
   }
-
-  // async getPostsByUserId(userId: string, page: number, limit: number): Promise<
-  // total: number
-  // page: number
-  // limit: number
-  // postData: BlogPost[]> {
-  //   const skip = (page - 1) * limit;
-  //   const response = await this.blogPostModel
-  //     .find()
-  //     .sort({ createdAt: -1 })
-  //     .skip(skip)
-  //     .limit(limit)
-  //     .populate('author', 'name email');
-  //   const total = await this.blogPostModel.countDocuments();
-
-  //   return {
-  //     total,
-  //     page,
-  //     limit,
-  //     postData: response,
-  //   };
-  // try {
-  //   const posts = await this.blogPostModel
-  //     .find({ author: userId })
-  //     .sort({ createdAt: -1 })
-  //     .populate('author', 'name email');
-  //   return posts;
-  // } catch(error) {
-  //   console.error('Get Posts By User ID Error:', error.message);
-  //   return [];
-  // }
-  // }
-
 
 
   async getPostById(blogPostId: string): Promise<BlogPost | null> {

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { SIGNINDTO } from 'apps/auth/src/dto/signin.dto';
-import { SIGNUPDTO } from 'apps/auth/src/dto/signup.dto';
+import { SIGNINDTO } from '../../../auth/src/dto/signin.dto';
+import { SIGNUPDTO } from '../../..//auth/src/dto/signup.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from '../pipes/validation.pipe';
@@ -30,10 +30,10 @@ export class AuthController {
         message: "Sign up successfully"
       });
     } catch (error) {
-
+      console.error("Error occur in signup: ", error.message)
       return res.status(error?.statusCode || 500).json({
         status: false,
-        message: error.message || 'Somwthing went wrong during sign up',
+        message: 'Something went wrong during sign up',
       });
     }
   }
@@ -56,10 +56,10 @@ export class AuthController {
       });
 
     } catch (error) {
-
+      console.error("Error occur in signin: ", error.message)
       return res.status(error?.statusCode || 500).json({
         status: false,
-        message: error.message || 'Somwthing went wrong during sign in',
+        message: error.message || 'Something went wrong during sign in',
       });
     }
 
@@ -98,6 +98,7 @@ export class AuthController {
       return res.redirect(redirectUrl);
 
     } catch (error) {
+      console.error("Error occur in google signin: ", error.message)
       return res.status(error?.statusCode || 500).json({
         status: false,
         message: error.message || 'Something went wrong during Google sign-in',

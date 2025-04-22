@@ -12,6 +12,6 @@ export class SIGNUPDTO {
     name: string;
 
     avatar?: string
-    provider: PROVIDERS
+    provider?: PROVIDERS
     providerId?: string
 }
