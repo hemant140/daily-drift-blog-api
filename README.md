@@ -66,6 +66,19 @@ npm run start:auth
 npm run start:blog
 ```
 
+## Testing Credential Accounts
+
+```bash
+hemant2@gmail.com
+1234
+
+hemant3@gmail.com
+1234
+
+test@gmail.com
+test
+```
+
 ## Run all test cases with verbose output
 ```bash
 npm run test -- --verbose
