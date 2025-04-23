@@ -15,7 +15,7 @@ import { Response, Request } from 'express';
 import { BlogPostService } from './blog-post.service';
 import { BLOGPOSTDTO } from '../../../blog-post/src/dto/blog-post.dto';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from '../pipes/validation.pipe';
 import { SchemaValidation } from '../validations/schema.validation';
 
@@ -58,6 +58,9 @@ export class BlogPostController {
   @Get('user-posts')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all blog posts by the authenticated user' })
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (optional)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Number of posts per page (optional)' })
+  @ApiQuery({ name: 'search', required: false, type: String, description: 'Search keyword (optional)' })
   @ApiResponse({ status: 200, description: 'List of user posts' })
   @ApiBearerAuth()
   async getAllUserPosts(
@@ -87,6 +90,9 @@ export class BlogPostController {
   @Get()
   @ApiOperation({ summary: 'Get all blog posts' })
   @ApiResponse({ status: 200, description: 'List of all posts' })
+  @ApiQuery({ name: 'page', required: false, type: Number, description: 'Page number (optional)' })
+  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Number of posts per page (optional)' })
+  @ApiQuery({ name: 'search', required: false, type: String, description: 'Search keyword (optional)' })
   async getAllPosts(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 8,
