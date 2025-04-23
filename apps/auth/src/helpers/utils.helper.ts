@@ -32,7 +32,9 @@ export class Utility {
 
     generateJWTToken(payload: any) {
         try {
-            return this.jwtService.sign(payload);
+            return this.jwtService.sign(payload, {
+                expiresIn: '30d'
+            });
         } catch (error) {
             throw new RpcException(
                 {

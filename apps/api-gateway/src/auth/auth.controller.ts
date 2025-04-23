@@ -32,7 +32,7 @@ export class AuthController {
     } catch (error) {
       return res.status(error?.statusCode || 500).json({
         status: false,
-        message: 'Something went wrong during sign up',
+        message: error.message || 'Something went wrong during sign up',
       });
     }
   }
