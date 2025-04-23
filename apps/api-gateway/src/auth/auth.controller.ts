@@ -30,7 +30,6 @@ export class AuthController {
         message: "Sign up successfully"
       });
     } catch (error) {
-      console.error("Error occur in signup: ", error.message)
       return res.status(error?.statusCode || 500).json({
         status: false,
         message: 'Something went wrong during sign up',
