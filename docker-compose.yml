@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  auth:
+    build:
+      context: .
+      dockerfile: apps/auth/Dockerfile
+    ports:
+      - '3001:3001'
+    command: npm run start:auth
+    env_file:
+      - .env
+    networks:
+      - jk-network
+
+  blog-post:
+    build:
+      context: .
+      dockerfile: apps/blog-post/Dockerfile
+    ports:
+      - '3002:3002'
+    command: npm run start:blog
+    env_file:
+      - .env
+    networks:
+      - jk-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    ports:
+      - '7001:7001'
+    command: npm run start:dev
+    depends_on:
+      - auth
+      - blog-post
+    env_file:
+      - .env
+    networks:
+      - jk-network
+
+networks:
+  jk-network:
+    driver: bridge

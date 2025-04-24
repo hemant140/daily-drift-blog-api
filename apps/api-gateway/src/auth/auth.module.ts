@@ -18,6 +18,7 @@ import { GoogleStrategy } from '../oauth/google.strategy';
         name: "AUTH_CLIENT",
         transport: Transport.TCP,
         options: {
+          host: 'auth',
           port: 3001,
         }
       }
