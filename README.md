@@ -20,7 +20,8 @@ Blog Post App is a full-featured blog platform using NestJS microservices. It al
 - Google OAuth
 - Swagger for API Docs
 - Jest for testing
-- 
+
+
 ## Installation Steps
 
 [Node.js](https://nodejs.org/) v18+ to run.
@@ -64,6 +65,38 @@ npm run start:auth
 - Start only the blog post microservice
 ```bash
 npm run start:blog
+```
+
+## Docker Setup
+
+1.Build Container
+
+```bash
+docker-compose build
+```
+
+2.Run Services
+
+```bash
+docker-compose up
+```
+
+3.Stop Services
+
+```bash
+docker-compose down
+```
+
+4.Build Container & Run
+
+```bash
+docker-compose up --build
+```
+
+5 To run in background
+
+```bash
+docker-compose up -d
 ```
 
 ## Testing Credential Accounts
