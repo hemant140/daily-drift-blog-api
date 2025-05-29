@@ -40,6 +40,7 @@ services:
     environment:
       - AUTH_HOST=auth
       - BLOG_HOST=blog-post
+      - MONGO_URI=mongodb+srv://hemohm579:FBzr9Uscmg38O3h9@crudoperations.ezgvkqq.mongodb.net/
     networks:
       - jk-network
 
