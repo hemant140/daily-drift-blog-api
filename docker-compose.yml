@@ -37,6 +37,9 @@ services:
       - blog-post
     env_file:
       - .env
+    environment:
+      - AUTH_HOST=auth
+      - BLOG_HOST=blog-post
     networks:
       - jk-network
 

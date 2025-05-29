@@ -10,7 +10,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: "BLOG_POST_CLIENT",
         transport: Transport.TCP,
         options: {
-          host: "blog-post",
+          host: process.env.BLOG_HOST || 'localhost',
           port: 3002,
         }
       }
