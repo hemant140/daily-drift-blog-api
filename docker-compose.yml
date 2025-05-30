@@ -31,7 +31,7 @@ services:
       dockerfile: apps/api-gateway/Dockerfile
     ports:
       - '7001:7001'
-    command: npm run start:dev
+    command: npm run start:all
     depends_on:
       - auth
       - blog-post
