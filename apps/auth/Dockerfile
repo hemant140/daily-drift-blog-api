@@ -10,4 +10,4 @@ COPY . .
 
 RUN npm run build
 
-CMD ["npm", "run", "start:auth"]
+CMD ["node", "dist/apps/blog-post/main.js"]

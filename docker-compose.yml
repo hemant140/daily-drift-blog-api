@@ -7,7 +7,7 @@ services:
       dockerfile: apps/auth/Dockerfile
     ports:
       - '3001:3001'
-    command: npm run start:auth
+    command: node dist/apps/auth/main.js
     env_file:
       - .env
     networks:
@@ -19,7 +19,7 @@ services:
       dockerfile: apps/blog-post/Dockerfile
     ports:
       - '3002:3002'
-    command: npm run start:blog
+    command: node dist/apps/blog-post/main.js
     env_file:
       - .env
     networks:
@@ -31,7 +31,7 @@ services:
       dockerfile: apps/api-gateway/Dockerfile
     ports:
       - '7001:7001'
-    command: npm run start:all
+    command: node dist/apps/api-gateway/main.js
     depends_on:
       - auth
       - blog-post
@@ -40,7 +40,7 @@ services:
     environment:
       - AUTH_HOST=auth
       - BLOG_HOST=blog-post
-      - MONGO_URI=mongodb+srv://hemohm579:FBzr9Uscmg38O3h9@crudoperations.ezgvkqq.mongodb.net/
+      - MONGO_URI=${MONGO_URI}
       - DB_NAME=blog-post
       - POOL_SIZE=10
     networks:
